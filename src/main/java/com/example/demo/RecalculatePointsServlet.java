@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RecalculatePointsServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("🔄 RecalculatePointsServlet triggered!");
+        System.out.println("🔄 com.example.demo.RecalculatePointsServlet triggered!");
 
         String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
         String user = "root";
