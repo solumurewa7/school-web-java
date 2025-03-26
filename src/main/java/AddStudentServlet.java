@@ -14,6 +14,7 @@ public class AddStudentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        System.out.println("🔥 AddStudentServlet has been called!");
         // Get form data
         String[] nameParts = request.getParameter("student-name").split(" ");
         String firstName = nameParts[0];
