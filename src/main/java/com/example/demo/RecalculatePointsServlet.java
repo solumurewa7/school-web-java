@@ -1,6 +1,5 @@
 package com.example.demo;
 
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,13 +20,13 @@ public class RecalculatePointsServlet extends HttpServlet {
         String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // Step 1: Get total points per house
+            // Step 1: Get total points per house from students
             String sumPointsSQL = "SELECT house, SUM(points) AS total FROM students GROUP BY house";
             PreparedStatement sumStmt = conn.prepareStatement(sumPointsSQL);
             ResultSet rs = sumStmt.executeQuery();
 
-            // Step 2: Update house points
-            String updateHouseSQL = "UPDATE houses SET points = ? WHERE name = ?";
+            // Step 2: Update house table
+            String updateHouseSQL = "UPDATE houses SET points = ? WHERE house_name = ?";
             PreparedStatement updateStmt = conn.prepareStatement(updateHouseSQL);
 
             while (rs.next()) {
@@ -42,7 +41,7 @@ public class RecalculatePointsServlet extends HttpServlet {
             response.getWriter().println("✅ House points successfully recalculated!");
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().println("❌ Error during house point recalculation.");
+            response.getWriter().println("❌ Error during house point recalculation: " + e.getMessage());
         }
     }
 }
