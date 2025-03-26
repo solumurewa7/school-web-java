@@ -8,12 +8,16 @@ import java.sql.ResultSet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+// JSON support
 import org.json.JSONObject;
 
 public class HousePointsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        System.out.println("📡 HousePointsServlet called");
+
+        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school"; // ✅ Correct DB name
         String user = "root";
         String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
 
@@ -25,18 +29,18 @@ public class HousePointsServlet extends HttpServlet {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String house = rs.getString("house_name").toLowerCase(); // red, blue, etc.
+                String house = rs.getString("house_name").toLowerCase(); // must be lowercase!
                 int points = rs.getInt("points");
-                json.put(house, points);
+                json.put(house, points); // Ex: json.put("red", 1250)
             }
 
             response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write(json.toString());
+
         } catch (Exception e) {
             e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"Failed to fetch points.\"}");
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\":\"Failed to fetch house points.\"}");
         }
     }
 }
