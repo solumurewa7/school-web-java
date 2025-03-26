@@ -35,7 +35,7 @@ public class AddStudentServlet extends HttpServlet {
         String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // 👦 Step 1: Insert student
+            // 1. Insert student
             String insertStudentSQL = "INSERT INTO students (first_name, last_name, email, house, points) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement studentStmt = conn.prepareStatement(insertStudentSQL, PreparedStatement.RETURN_GENERATED_KEYS);
             studentStmt.setString(1, firstName);
@@ -45,26 +45,32 @@ public class AddStudentServlet extends HttpServlet {
             studentStmt.setInt(5, points);
             studentStmt.executeUpdate();
 
-            // 🆔 Get the student's ID for parent linking
             ResultSet rs = studentStmt.getGeneratedKeys();
             int studentId = -1;
             if (rs.next()) {
                 studentId = rs.getInt(1);
             }
 
-            // 👨‍👩 Step 2: Insert parent
+            // 2. Insert parent
             String insertParentSQL = "INSERT INTO parents (student_id, parent_type, first_name, last_name, email) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement parentStmt = conn.prepareStatement(insertParentSQL);
             parentStmt.setInt(1, studentId);
-            parentStmt.setString(2, parentType); // Mom or Dad
+            parentStmt.setString(2, parentType);
             parentStmt.setString(3, parentFirstName);
             parentStmt.setString(4, parentLastName);
             parentStmt.setString(5, parentEmail);
             parentStmt.executeUpdate();
 
-            // 🎉 Success message
+            // 3. Update house points
+            String updateHouseSQL = "UPDATE houses SET points = points + ? WHERE house_name = ?";
+            PreparedStatement houseStmt = conn.prepareStatement(updateHouseSQL);
+            houseStmt.setInt(1, points);
+            houseStmt.setString(2, house);
+            houseStmt.executeUpdate();
+
             response.getWriter().println("✅ Student and parent added successfully!");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             // ❌ Print the actual error on the webpage AND in the logs
             response.getWriter().println("❌ Error: " + e.getMessage());
             e.printStackTrace();

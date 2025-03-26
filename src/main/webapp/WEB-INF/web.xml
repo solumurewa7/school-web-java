@@ -13,4 +13,15 @@
         <servlet-name>AddStudentServlet</servlet-name>
         <url-pattern>/add-student</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RecalculatePointsServlet</servlet-name>
+        <servlet-class>com.example.demo.RecalculatePointsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RecalculatePointsServlet</servlet-name>
+        <url-pattern>/recalculate-points</url-pattern>
+    </servlet-mapping>
+
 </web-app>
