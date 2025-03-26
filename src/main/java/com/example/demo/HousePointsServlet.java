@@ -8,8 +8,6 @@ import java.sql.ResultSet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-// Add this import for JSON support
 import org.json.JSONObject;
 
 public class HousePointsServlet extends HttpServlet {
@@ -33,9 +31,11 @@ public class HousePointsServlet extends HttpServlet {
             }
 
             response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write(json.toString());
         } catch (Exception e) {
             e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\":\"Failed to fetch points.\"}");
         }
     }

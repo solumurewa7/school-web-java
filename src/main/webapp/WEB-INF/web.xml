@@ -6,7 +6,7 @@
 
     <servlet>
         <servlet-name>AddStudentServlet</servlet-name>
-        <servlet-class>AddStudentServlet</servlet-class>
+        <servlet-class>com.example.demo.AddStudentServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -24,9 +24,6 @@
         <url-pattern>/recalculate-points</url-pattern>
     </servlet-mapping>
 
-
-
-
     <servlet>
         <servlet-name>HousePointsServlet</servlet-name>
         <servlet-class>com.example.demo.HousePointsServlet</servlet-class>
@@ -36,10 +33,5 @@
         <servlet-name>HousePointsServlet</servlet-name>
         <url-pattern>/house-points</url-pattern>
     </servlet-mapping>
-
-
-
-
-
 
 </web-app>
