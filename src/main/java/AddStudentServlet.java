@@ -30,7 +30,7 @@ public class AddStudentServlet extends HttpServlet {
         String parentLastName = parentNameParts.length > 1 ? parentNameParts[1] : "";
 
         // 🔑 Use your actual Railway SQL connection info here:
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/railway";
+        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
         String user = "root";
         String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
 
