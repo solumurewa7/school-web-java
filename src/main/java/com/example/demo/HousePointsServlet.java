@@ -5,19 +5,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// JSON support
 import org.json.JSONObject;
 
 public class HousePointsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("📡 HousePointsServlet called");
+        // ✅ Allow CORS from any domain (or specify yours)
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("application/json");
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school"; // ✅ Correct DB name
+        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
         String user = "root";
         String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
 
@@ -29,18 +31,15 @@ public class HousePointsServlet extends HttpServlet {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String house = rs.getString("house_name").toLowerCase(); // must be lowercase!
+                String house = rs.getString("house_name").toLowerCase();
                 int points = rs.getInt("points");
-                json.put(house, points); // Ex: json.put("red", 1250)
+                json.put(house, points);
             }
 
-            response.setContentType("application/json");
             response.getWriter().write(json.toString());
-
         } catch (Exception e) {
             e.printStackTrace();
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\":\"Failed to fetch house points.\"}");
+            response.getWriter().write("{\"error\":\"Failed to fetch points.\"}");
         }
     }
 }
