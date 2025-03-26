@@ -4,17 +4,17 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/add-student")
 public class AddStudentServlet extends HttpServlet {
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         System.out.println("🔥 AddStudentServlet has been called!");
+
         // Get form data
         String[] nameParts = request.getParameter("student-name").split(" ");
         String firstName = nameParts[0];
@@ -24,18 +24,26 @@ public class AddStudentServlet extends HttpServlet {
         String parentName = request.getParameter("parent-name");
         String parentEmail = request.getParameter("parent-email");
         String house = request.getParameter("house");
-        int points = Integer.parseInt(request.getParameter("points"));
+
+        int points = 0;
+        try {
+            points = Integer.parseInt(request.getParameter("points"));
+        } catch (NumberFormatException e) {
+            System.out.println("⚠️ Invalid points input. Defaulting to 0.");
+        }
 
         String[] parentNameParts = parentName.split(" ");
         String parentFirstName = parentNameParts[0];
         String parentLastName = parentNameParts.length > 1 ? parentNameParts[1] : "";
 
+        // Database connection
         String url = "jdbc:mysql://localhost:3306/school";
         String user = "root";
-        String password = "yourPassword"; // ← Replace with your actual MySQL password
+        String password = "seyolu7X"; // Replace with your real MySQL password
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // 1. Insert student
+
+            // Insert student
             String insertStudentSQL = "INSERT INTO students (first_name, last_name, email, house, points) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement studentStmt = conn.prepareStatement(insertStudentSQL, PreparedStatement.RETURN_GENERATED_KEYS);
             studentStmt.setString(1, firstName);
@@ -45,14 +53,14 @@ public class AddStudentServlet extends HttpServlet {
             studentStmt.setInt(5, points);
             studentStmt.executeUpdate();
 
-            // Get student_id that was just inserted
+            // Get student ID
             ResultSet rs = studentStmt.getGeneratedKeys();
             int studentId = -1;
             if (rs.next()) {
                 studentId = rs.getInt(1);
             }
 
-            // 2. Insert parent linked to the student
+            // Insert parent
             String insertParentSQL = "INSERT INTO parents (student_id, parent_type, first_name, last_name, email) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement parentStmt = conn.prepareStatement(insertParentSQL);
             parentStmt.setInt(1, studentId);
@@ -62,10 +70,12 @@ public class AddStudentServlet extends HttpServlet {
             parentStmt.setString(5, parentEmail);
             parentStmt.executeUpdate();
 
-            // Response
+            // Respond to client
+            response.setContentType("text/plain");
             response.getWriter().println("✅ Student and parent added successfully!");
         } catch (Exception e) {
             e.printStackTrace();
+            response.setContentType("text/plain");
             response.getWriter().println("❌ Error adding student and parent.");
         }
     }
