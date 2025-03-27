@@ -67,4 +67,21 @@
 
 
 
+
+
+
+
+    <servlet>
+        <servlet-name>TopStudentsServlet</servlet-name>
+        <servlet-class>com.example.demo.TopStudentsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TopStudentsServlet</servlet-name>
+        <url-pattern>/top-students</url-pattern>
+    </servlet-mapping>
+
+
+
+
 </web-app>
