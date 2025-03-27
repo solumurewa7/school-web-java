@@ -13,6 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 public class StudentPointsServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+
         String studentId = request.getParameter("student-id");
 
         String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
