@@ -34,4 +34,22 @@
         <url-pattern>/house-points</url-pattern>
     </servlet-mapping>
 
+
+
+    <servlet>
+        <servlet-name>GivePointsServlet</servlet-name>
+        <servlet-class>com.example.demo.GivePointsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GivePointsServlet</servlet-name>
+        <url-pattern>/give-points</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
+
 </web-app>
