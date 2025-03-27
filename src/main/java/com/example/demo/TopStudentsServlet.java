@@ -31,11 +31,18 @@ public class TopStudentsServlet extends HttpServlet {
                 jsonArray.put(obj);
             }
 
+            // 👇 CORS fix
+            response.setHeader("Access-Control-Allow-Origin", "*");
+
             response.setContentType("application/json");
             response.getWriter().write(jsonArray.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
+
+            // 👇 CORS for error responses too
+            response.setHeader("Access-Control-Allow-Origin", "*");
+
             response.setContentType("application/json");
             response.getWriter().write("{\"error\":\"Failed to fetch top students\"}");
         }
