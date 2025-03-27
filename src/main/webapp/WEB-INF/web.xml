@@ -84,4 +84,25 @@
 
 
 
+
+
+
+
+
+    <servlet>
+        <servlet-name>StudentPointsServlet</servlet-name>
+        <servlet-class>com.example.demo.StudentPointsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>StudentPointsServlet</servlet-name>
+        <url-pattern>/student-points</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
+
 </web-app>
