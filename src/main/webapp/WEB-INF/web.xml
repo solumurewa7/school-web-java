@@ -50,6 +50,21 @@
 
 
 
+    <servlet>
+        <servlet-name>StudentsServlet</servlet-name>
+        <servlet-class>com.example.demo.StudentsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>StudentsServlet</servlet-name>
+        <url-pattern>/students</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
 
 
 </web-app>
