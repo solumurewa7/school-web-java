@@ -9,7 +9,7 @@ import java.sql.*;
 public class StudentInfoServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String studentIdParam = request.getParameter("id");
+        String studentIdParam = request.getParameter("student-id"); // ✅ CHANGED from "id" to "student-id"
 
         if (studentIdParam == null || studentIdParam.isEmpty()) {
             response.setContentType("application/json");
@@ -33,7 +33,7 @@ public class StudentInfoServlet extends HttpServlet {
         JSONObject json = new JSONObject();
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // 1. Get student
+            // 1. Get student info
             String studentSQL = "SELECT first_name, last_name FROM students WHERE student_id = ?";
             try (PreparedStatement studentStmt = conn.prepareStatement(studentSQL)) {
                 studentStmt.setInt(1, studentId);
@@ -44,7 +44,7 @@ public class StudentInfoServlet extends HttpServlet {
                 }
             }
 
-            // 2. Get parent
+            // 2. Get parent info
             String parentSQL = "SELECT first_name, last_name, email FROM parents WHERE student_id = ?";
             try (PreparedStatement parentStmt = conn.prepareStatement(parentSQL)) {
                 parentStmt.setInt(1, studentId);
