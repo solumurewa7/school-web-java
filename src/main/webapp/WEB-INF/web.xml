@@ -50,18 +50,18 @@
 
 
 
+
+
+
     <servlet>
-        <servlet-name>StudentsServlet</servlet-name>
-        <servlet-class>com.example.demo.StudentsServlet</servlet-class>
+        <servlet-name>StudentListServlet</servlet-name>
+        <servlet-class>com.example.demo.StudentListServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>StudentsServlet</servlet-name>
+        <servlet-name>StudentListServlet</servlet-name>
         <url-pattern>/students</url-pattern>
     </servlet-mapping>
-
-
-
 
 
 
