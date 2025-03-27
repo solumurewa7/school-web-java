@@ -27,7 +27,7 @@ public class StudentListServlet extends HttpServlet {
 
             while (rs.next()) {
                 JSONObject student = new JSONObject();
-                student.put("id", rs.getInt("id"));
+                student.put("id", rs.getInt("student_id"));
                 student.put("first_name", rs.getString("first_name"));
                 student.put("last_name", rs.getString("last_name"));
                 students.put(student);
