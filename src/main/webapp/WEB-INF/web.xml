@@ -105,4 +105,31 @@
 
 
 
+
+
+
+    <servlet>
+        <servlet-name>StudentInfoServlet</servlet-name>
+        <servlet-class>com.example.demo.StudentInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StudentInfoServlet</servlet-name>
+        <url-pattern>/student-info</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>EditStudentParentServlet</servlet-name>
+        <servlet-class>com.example.demo.EditStudentParentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditStudentParentServlet</servlet-name>
+        <url-pattern>/edit-info</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
+
 </web-app>
