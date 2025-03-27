@@ -7,7 +7,14 @@ import java.sql.*;
 public class EditStudentParentServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int studentId = Integer.parseInt(request.getParameter("edit-student-id"));
+        String studentIdStr = request.getParameter("edit-student-id");
+
+        if (studentIdStr == null || studentIdStr.isEmpty()) {
+            response.getWriter().println("❌ Student ID is missing.");
+            return;
+        }
+
+        int studentId = Integer.parseInt(studentIdStr);
         String studentFirst = request.getParameter("edit-student-first");
         String studentLast = request.getParameter("edit-student-last");
         String parentFirst = request.getParameter("edit-parent-first");
