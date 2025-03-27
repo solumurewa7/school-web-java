@@ -139,7 +139,7 @@
 
     <servlet-mapping>
         <servlet-name>EditOneFieldServlet</servlet-name>
-        <url-pattern>/edit-field</url-pattern>
+        <url-pattern>/update-field</url-pattern>
     </servlet-mapping>
 
 
