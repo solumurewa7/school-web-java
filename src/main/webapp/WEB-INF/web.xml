@@ -132,4 +132,19 @@
 
 
 
+    <servlet>
+        <servlet-name>EditOneFieldServlet</servlet-name>
+        <servlet-class>com.example.demo.EditOneFieldServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>EditOneFieldServlet</servlet-name>
+        <url-pattern>/edit-field</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
 </web-app>
