@@ -147,4 +147,36 @@
 
 
 
+
+
+
+
+
+    <!-- Reset All Data Servlet -->
+    <servlet>
+        <servlet-name>ResetAllServlet</servlet-name>
+        <servlet-class>com.example.demo.ResetAllServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ResetAllServlet</servlet-name>
+        <url-pattern>/reset-all</url-pattern>
+    </servlet-mapping>
+
+    <!-- Reset House Points Servlet -->
+    <servlet>
+        <servlet-name>ResetHousePointsServlet</servlet-name>
+        <servlet-class>com.example.demo.ResetHousePointsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ResetHousePointsServlet</servlet-name>
+        <url-pattern>/reset-house-points</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
 </web-app>
