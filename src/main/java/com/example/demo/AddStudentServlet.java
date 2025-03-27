@@ -1,46 +1,53 @@
 package com.example.demo;
 
-
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.sql.*;
+import javax.servlet.http.*;
 
 public class AddStudentServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("🔥 AddStudentServlet has been called!");
 
-        // Get form data from the HTML
-        String[] nameParts = request.getParameter("student-name").split(" ");
-        String firstName = nameParts[0];
-        String lastName = nameParts.length > 1 ? nameParts[1] : "";
-
+        // Get parameters
+        String fullName = request.getParameter("student-name");
         String studentEmail = request.getParameter("student-email");
         String parentName = request.getParameter("parent-name");
         String parentEmail = request.getParameter("parent-email");
-        String parentType = request.getParameter("parent-type");  // "Mom" or "Dad"
+        String parentType = request.getParameter("parent-type");
         String house = request.getParameter("house");
-        int points = Integer.parseInt(request.getParameter("points"));
 
-        String[] parentNameParts = parentName.split(" ");
-        String parentFirstName = parentNameParts[0];
-        String parentLastName = parentNameParts.length > 1 ? parentNameParts[1] : "";
+        // Validation
+        if (fullName == null || studentEmail == null || parentName == null ||
+                parentEmail == null || parentType == null || house == null ||
+                fullName.isEmpty() || studentEmail.isEmpty() || parentName.isEmpty() ||
+                parentEmail.isEmpty() || parentType.isEmpty() || house.isEmpty()) {
 
-        // 🔑 Use your actual Railway SQL connection info here:
+            response.getWriter().println("❌ Missing required input fields.");
+            return;
+        }
+
+        // Split names
+        String[] nameParts = fullName.trim().split(" ");
+        String firstName = nameParts[0];
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+
+        String[] parentParts = parentName.trim().split(" ");
+        String parentFirst = parentParts[0];
+        String parentLast = parentParts.length > 1 ? parentParts[1] : "";
+
+        // Default new students to 0 points
+        int points = 0;
+
         String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
         String user = "root";
         String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
+
             // 1. Insert student
             String insertStudentSQL = "INSERT INTO students (first_name, last_name, email, house, points) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement studentStmt = conn.prepareStatement(insertStudentSQL, PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement studentStmt = conn.prepareStatement(insertStudentSQL, Statement.RETURN_GENERATED_KEYS);
             studentStmt.setString(1, firstName);
             studentStmt.setString(2, lastName);
             studentStmt.setString(3, studentEmail);
@@ -59,24 +66,16 @@ public class AddStudentServlet extends HttpServlet {
             PreparedStatement parentStmt = conn.prepareStatement(insertParentSQL);
             parentStmt.setInt(1, studentId);
             parentStmt.setString(2, parentType);
-            parentStmt.setString(3, parentFirstName);
-            parentStmt.setString(4, parentLastName);
+            parentStmt.setString(3, parentFirst);
+            parentStmt.setString(4, parentLast);
             parentStmt.setString(5, parentEmail);
             parentStmt.executeUpdate();
 
-            // 3. Update house points
-            String updateHouseSQL = "UPDATE houses SET points = points + ? WHERE house_name = ?";
-            PreparedStatement houseStmt = conn.prepareStatement(updateHouseSQL);
-            houseStmt.setInt(1, points);
-            houseStmt.setString(2, house);
-            houseStmt.executeUpdate();
-
             response.getWriter().println("✅ Student and parent added successfully!");
-        }
-        catch (Exception e) {
-            // ❌ Print the actual error on the webpage AND in the logs
-            response.getWriter().println("❌ Error: " + e.getMessage());
+
+        } catch (Exception e) {
             e.printStackTrace();
+            response.getWriter().println("❌ Error: " + e.getMessage());
         }
     }
 }
