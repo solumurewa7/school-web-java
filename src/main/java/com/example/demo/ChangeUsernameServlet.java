@@ -11,7 +11,15 @@ public class ChangeUsernameServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Methods", "POST");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-        String newUsername = request.getParameter("new-username");
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("isAdmin") == null) {
+            response.getWriter().println("❌ Unauthorized. Admin login required.");
+            return;
+        }
+
+
+        String newUsername = request.getParameter("new-username").trim();
 
         if (newUsername == null || newUsername.trim().isEmpty()) {
             response.getWriter().println("❌ New username cannot be empty.");
