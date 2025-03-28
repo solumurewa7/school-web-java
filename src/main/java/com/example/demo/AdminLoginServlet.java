@@ -65,6 +65,10 @@ public class AdminLoginServlet extends HttpServlet {
                 if (storedHash.equals(inputHash)) {
                     HttpSession session = request.getSession();
                     session.setAttribute("isAdmin", true);
+
+                    // ✅ Add this to explicitly set a cross-site session cookie
+                    response.setHeader("Set-Cookie", "JSESSIONID=" + session.getId() + "; SameSite=None; Secure; Path=/; HttpOnly");
+
                     response.getWriter().println("✅ Login successful");
                 } else {
                     response.getWriter().println("❌ Incorrect password.");
