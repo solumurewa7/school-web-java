@@ -30,22 +30,15 @@ public class AdminLoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+        // ✅ CORS headers
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
-        response.setHeader("Access-Control-Allow-Credentials", "true"); // 🔥 Required!
+        response.setHeader("Access-Control-Allow-Credentials", "true"); // 💥 This must be present
         response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-
-
-        // ✅ Set proper encoding
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain; charset=UTF-8");
 
-        // ✅ CORS headers
-        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
-        response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
         String username = request.getParameter("admin-username");
         String password = request.getParameter("admin-password");
