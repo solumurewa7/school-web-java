@@ -22,6 +22,7 @@ public class AdminLoginServlet extends HttpServlet {
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
         // ✅ CORS preflight support
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true"); // 🔥 Required!
         response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -29,6 +30,14 @@ public class AdminLoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true"); // 🔥 Required!
+        response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+
+
         // ✅ Set proper encoding
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain; charset=UTF-8");
