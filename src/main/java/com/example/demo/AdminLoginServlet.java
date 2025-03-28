@@ -18,12 +18,25 @@ public class AdminLoginServlet extends HttpServlet {
         return sb.toString();
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
+        // ✅ CORS preflight support
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // ✅ Set proper encoding
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain; charset=UTF-8");
+
+        // ✅ CORS headers
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
         String username = request.getParameter("admin-username");
         String password = request.getParameter("admin-password");
