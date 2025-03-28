@@ -25,7 +25,7 @@ public class UploadStudentListServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("text/plain; charset=UTF-8");
 
-        Part filePart = request.getPart("student-upload");
+        Part filePart = request.getPart("student-file");
 
         Collection<Part> parts = request.getParts();
         for (Part part : parts) {
