@@ -56,25 +56,24 @@ public class UploadStudentListServlet extends HttpServlet {
                 String parentEmail = fields[6];
                 String parentType = fields[7];
 
-                int houseId = -1;
-                try (PreparedStatement houseStmt = conn.prepareStatement("SELECT id FROM houses WHERE house_name = ?")) {
-                    houseStmt.setString(1, houseName);
-                    ResultSet rs = houseStmt.executeQuery();
-                    if (rs.next()) {
-                        houseId = rs.getInt("id");
-                    } else {
+                // ✅ Check if the house exists
+                try (PreparedStatement houseCheck = conn.prepareStatement("SELECT 1 FROM houses WHERE house_name = ?")) {
+                    houseCheck.setString(1, houseName);
+                    ResultSet rs = houseCheck.executeQuery();
+                    if (!rs.next()) {
                         System.out.println("⚠️ House not found: " + houseName);
                         continue;
                     }
                 }
 
+                // ✅ Insert into students using house_name (not house_id)
                 int studentId = -1;
-                String insertStudent = "INSERT INTO students (first_name, last_name, email, house_id, points) VALUES (?, ?, ?, ?, 0)";
+                String insertStudent = "INSERT INTO students (first_name, last_name, email, house_name, points) VALUES (?, ?, ?, ?, 0)";
                 try (PreparedStatement stmt = conn.prepareStatement(insertStudent, Statement.RETURN_GENERATED_KEYS)) {
                     stmt.setString(1, studentFirst);
                     stmt.setString(2, studentLast);
                     stmt.setString(3, studentEmail);
-                    stmt.setInt(4, houseId);
+                    stmt.setString(4, houseName);
                     stmt.executeUpdate();
 
                     ResultSet rs = stmt.getGeneratedKeys();
@@ -86,6 +85,7 @@ public class UploadStudentListServlet extends HttpServlet {
                     }
                 }
 
+                // ✅ Insert into parents table
                 String insertParent = "INSERT INTO parents (first_name, last_name, email, parent_type, student_id) VALUES (?, ?, ?, ?, ?)";
                 try (PreparedStatement stmt = conn.prepareStatement(insertParent)) {
                     stmt.setString(1, parentFirst);
