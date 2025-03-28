@@ -192,4 +192,30 @@
 
 
 
+
+    <servlet>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <servlet-class>com.example.demo.ChangePasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <url-pattern>/change-password</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ChangeUsernameServlet</servlet-name>
+        <servlet-class>com.example.demo.ChangeUsernameServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangeUsernameServlet</servlet-name>
+        <url-pattern>/change-username</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
+
+
 </web-app>
