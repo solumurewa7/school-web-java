@@ -5,6 +5,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.*;
 import java.io.*;
 import java.sql.*;
+import java.util.Collection;
 
 @MultipartConfig
 public class UploadStudentListServlet extends HttpServlet {
@@ -24,7 +25,14 @@ public class UploadStudentListServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("text/plain; charset=UTF-8");
 
-        Part filePart = request.getPart("file");
+        Part filePart = request.getPart("student-upload");
+
+        Collection<Part> parts = request.getParts();
+        for (Part part : parts) {
+            System.out.println("📦 Incoming part: " + part.getName() + ", size: " + part.getSize());
+        }
+
+
         if (filePart == null) {
             response.getWriter().println("❌ No file uploaded.");
             return;
@@ -39,20 +47,20 @@ public class UploadStudentListServlet extends HttpServlet {
             String line;
             int successCount = 0;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.trim().split("\\s+");
-                if (parts.length != 8) {
+                String[] fields = line.trim().split("\\s+");
+                if (fields.length != 8) {
                     System.out.println("⚠️ Skipping line (invalid format): " + line);
                     continue;
                 }
 
-                String studentFirst = parts[0];
-                String studentLast = parts[1];
-                String studentEmail = parts[2];
-                String houseName = parts[3];
-                String parentFirst = parts[4];
-                String parentLast = parts[5];
-                String parentEmail = parts[6];
-                String parentType = parts[7];
+                String studentFirst = fields[0];
+                String studentLast = fields[1];
+                String studentEmail = fields[2];
+                String houseName = fields[3];
+                String parentFirst = fields[4];
+                String parentLast = fields[5];
+                String parentEmail = fields[6];
+                String parentType = fields[7];
 
                 // Get house_id
                 int houseId = -1;
