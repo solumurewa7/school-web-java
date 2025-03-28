@@ -218,4 +218,27 @@
 
 
 
+
+
+
+    <servlet>
+        <servlet-name>UploadStudentListServlet</servlet-name>
+        <servlet-class>com.example.demo.UploadStudentListServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UploadStudentListServlet</servlet-name>
+        <url-pattern>/upload-student-list</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
+
+
+
+
+
 </web-app>
