@@ -22,9 +22,20 @@ public class AddStudentServlet extends HttpServlet {
                 parentEmail == null || parentType == null || house == null ||
                 fullName.isEmpty() || studentEmail.isEmpty() || parentName.isEmpty() ||
                 parentEmail.isEmpty() || parentType.isEmpty() || house.isEmpty()) {
+// Ensure valid house name
+            String[] validHouses = {"Red", "Blue", "Yellow", "Green", "Black"};
+            boolean isValidHouse = false;
+            for (String h : validHouses) {
+                if (h.equalsIgnoreCase(house)) {
+                    isValidHouse = true;
+                    break;
+                }
+            }
+            if (!isValidHouse) {
+                response.getWriter().println("❌ Invalid house name.");
+                return;
+            }
 
-            response.getWriter().println("❌ Missing required input fields.");
-            return;
         }
 
         // Split names

@@ -22,6 +22,21 @@ public class EditOneFieldServlet extends HttpServlet {
         int studentId;
         try {
             studentId = Integer.parseInt(studentIdStr);
+            if (field.equals("house")) {
+                String[] validHouses = {"Red", "Blue", "Yellow", "Green", "Black"};
+                boolean isValid = false;
+                for (String h : validHouses) {
+                    if (h.equalsIgnoreCase(newValue)) {
+                        isValid = true;
+                        break;
+                    }
+                }
+                if (!isValid) {
+                    response.getWriter().println("❌ Invalid house name.");
+                    return;
+                }
+            }
+
         } catch (NumberFormatException e) {
             response.getWriter().println("❌ Invalid student ID.");
             return;
