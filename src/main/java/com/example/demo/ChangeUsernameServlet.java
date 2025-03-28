@@ -33,7 +33,9 @@ public class ChangeUsernameServlet extends HttpServlet {
         }
 
 
+
         String rawUsername = request.getParameter("new-username");
+        System.out.println("🔍 rawUsername: " + rawUsername);
         if (rawUsername == null || rawUsername.trim().isEmpty()) {
             response.getWriter().println("❌ New username cannot be empty.");
             return;
