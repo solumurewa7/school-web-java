@@ -1,92 +1,90 @@
 package com.example.demo;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
 import javax.servlet.http.*;
 
 public class AddStudentServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("🔥 AddStudentServlet has been called!");
+        // ✅ Enable CORS
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-        // Get parameters
-        String fullName = request.getParameter("student-name");
+        response.setContentType("text/plain");
+
+        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        String user = "root";
+        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+
+        String studentName = request.getParameter("student-name");
         String studentEmail = request.getParameter("student-email");
         String parentName = request.getParameter("parent-name");
         String parentEmail = request.getParameter("parent-email");
         String parentType = request.getParameter("parent-type");
         String house = request.getParameter("house");
 
-        // Validation
-        if (fullName == null || studentEmail == null || parentName == null ||
-                parentEmail == null || parentType == null || house == null ||
-                fullName.isEmpty() || studentEmail.isEmpty() || parentName.isEmpty() ||
-                parentEmail.isEmpty() || parentType.isEmpty() || house.isEmpty()) {
-// Ensure valid house name
-            String[] validHouses = {"Red", "Blue", "Yellow", "Green", "Black"};
-            boolean isValidHouse = false;
-            for (String h : validHouses) {
-                if (h.equalsIgnoreCase(house)) {
-                    isValidHouse = true;
-                    break;
-                }
-            }
-            if (!isValidHouse) {
-                response.getWriter().println("❌ Invalid house name.");
-                return;
-            }
-
+        if (studentName == null || studentEmail == null || parentName == null || parentEmail == null || parentType == null || house == null) {
+            response.getWriter().println("❌ Missing required field(s).");
+            return;
         }
 
-        // Split names
-        String[] nameParts = fullName.trim().split(" ");
-        String firstName = nameParts[0];
-        String lastName = nameParts.length > 1 ? nameParts[1] : "";
-
+        String[] studentParts = studentName.trim().split(" ");
         String[] parentParts = parentName.trim().split(" ");
+
+        if (studentParts.length < 2 || parentParts.length < 2) {
+            response.getWriter().println("❌ Please provide full names.");
+            return;
+        }
+
+        String studentFirst = studentParts[0];
+        String studentLast = studentParts[1];
         String parentFirst = parentParts[0];
-        String parentLast = parentParts.length > 1 ? parentParts[1] : "";
-
-        // Default new students to 0 points
-        int points = 0;
-
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
-        String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String parentLast = parentParts[1];
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-
-            // 1. Insert student
-            String insertStudentSQL = "INSERT INTO students (first_name, last_name, email, house, points) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement studentStmt = conn.prepareStatement(insertStudentSQL, Statement.RETURN_GENERATED_KEYS);
-            studentStmt.setString(1, firstName);
-            studentStmt.setString(2, lastName);
+            // Insert student
+            String studentSQL = "INSERT INTO students (student_first_name, student_last_name, student_email, house, points) VALUES (?, ?, ?, ?, 0)";
+            PreparedStatement studentStmt = conn.prepareStatement(studentSQL, Statement.RETURN_GENERATED_KEYS);
+            studentStmt.setString(1, studentFirst);
+            studentStmt.setString(2, studentLast);
             studentStmt.setString(3, studentEmail);
             studentStmt.setString(4, house);
-            studentStmt.setInt(5, points);
             studentStmt.executeUpdate();
 
-            ResultSet rs = studentStmt.getGeneratedKeys();
+            ResultSet generatedKeys = studentStmt.getGeneratedKeys();
             int studentId = -1;
-            if (rs.next()) {
-                studentId = rs.getInt(1);
+            if (generatedKeys.next()) {
+                studentId = generatedKeys.getInt(1);
             }
 
-            // 2. Insert parent
-            String insertParentSQL = "INSERT INTO parents (student_id, parent_type, first_name, last_name, email) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement parentStmt = conn.prepareStatement(insertParentSQL);
-            parentStmt.setInt(1, studentId);
-            parentStmt.setString(2, parentType);
-            parentStmt.setString(3, parentFirst);
-            parentStmt.setString(4, parentLast);
-            parentStmt.setString(5, parentEmail);
-            parentStmt.executeUpdate();
+            // Insert parent
+            if (studentId != -1) {
+                String parentSQL = "INSERT INTO parents (student_id, parent_first_name, parent_last_name, parent_email, relationship) VALUES (?, ?, ?, ?, ?)";
+                PreparedStatement parentStmt = conn.prepareStatement(parentSQL);
+                parentStmt.setInt(1, studentId);
+                parentStmt.setString(2, parentFirst);
+                parentStmt.setString(3, parentLast);
+                parentStmt.setString(4, parentEmail);
+                parentStmt.setString(5, parentType);
+                parentStmt.executeUpdate();
+            }
 
             response.getWriter().println("✅ Student and parent added successfully!");
-
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().println("❌ Error: " + e.getMessage());
+            response.getWriter().println("❌ Error adding student: " + e.getMessage());
         }
+    }
+
+    // Handle preflight requests
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
     }
 }
