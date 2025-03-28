@@ -56,19 +56,9 @@ public class UploadStudentListServlet extends HttpServlet {
                 String parentEmail = fields[6];
                 String parentType = fields[7];
 
-                // ✅ Check if the house exists
-                try (PreparedStatement houseCheck = conn.prepareStatement("SELECT 1 FROM houses WHERE house_name = ?")) {
-                    houseCheck.setString(1, houseName);
-                    ResultSet rs = houseCheck.executeQuery();
-                    if (!rs.next()) {
-                        System.out.println("⚠️ House not found: " + houseName);
-                        continue;
-                    }
-                }
-
-                // ✅ Insert into students using house_name (not house_id)
+                // Insert into students (use "house" as a string, not an ID)
                 int studentId = -1;
-                String insertStudent = "INSERT INTO students (first_name, last_name, email, house_name, points) VALUES (?, ?, ?, ?, 0)";
+                String insertStudent = "INSERT INTO students (first_name, last_name, email, house, points) VALUES (?, ?, ?, ?, 0)";
                 try (PreparedStatement stmt = conn.prepareStatement(insertStudent, Statement.RETURN_GENERATED_KEYS)) {
                     stmt.setString(1, studentFirst);
                     stmt.setString(2, studentLast);
@@ -85,7 +75,7 @@ public class UploadStudentListServlet extends HttpServlet {
                     }
                 }
 
-                // ✅ Insert into parents table
+                // Insert into parents
                 String insertParent = "INSERT INTO parents (first_name, last_name, email, parent_type, student_id) VALUES (?, ?, ?, ?, ?)";
                 try (PreparedStatement stmt = conn.prepareStatement(insertParent)) {
                     stmt.setString(1, parentFirst);
@@ -101,6 +91,7 @@ public class UploadStudentListServlet extends HttpServlet {
 
             conn.commit();
             response.getWriter().println("✅ Uploaded successfully. " + successCount + " students added.");
+
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().println("❌ Error processing file: " + e.getMessage());
