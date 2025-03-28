@@ -42,6 +42,11 @@ public class ChangePasswordServlet extends HttpServlet {
         String newPassword = request.getParameter("new-password");
         String confirmPassword = request.getParameter("confirm-password");
 
+
+        System.out.println("📥 current-password: " + request.getParameter("current-password"));
+        System.out.println("📥 new-password: " + request.getParameter("new-password"));
+        System.out.println("📥 confirm-password: " + request.getParameter("confirm-password"));
+
         if (currentPassword == null || newPassword == null || confirmPassword == null ||
                 currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
             response.getWriter().println("❌ All password fields are required.");
