@@ -6,12 +6,19 @@ import java.sql.*;
 
 public class EditOneFieldServlet extends HttpServlet {
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // CORS Headers
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+        response.setContentType("text/plain");
+
         String studentIdStr = request.getParameter("student-id");
         String field = request.getParameter("field-to-edit");
         String newValue = request.getParameter("new-value");
-
-        response.setContentType("text/plain");
 
         if (studentIdStr == null || field == null || newValue == null ||
                 studentIdStr.isEmpty() || field.isEmpty() || newValue.isEmpty()) {
@@ -36,7 +43,6 @@ public class EditOneFieldServlet extends HttpServlet {
                     return;
                 }
             }
-
         } catch (NumberFormatException e) {
             response.getWriter().println("❌ Invalid student ID.");
             return;
@@ -47,7 +53,7 @@ public class EditOneFieldServlet extends HttpServlet {
         String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            String sql = null;
+            String sql;
 
             switch (field) {
                 case "student_first_name":
@@ -92,5 +98,14 @@ public class EditOneFieldServlet extends HttpServlet {
             e.printStackTrace();
             response.getWriter().println("❌ Database error occurred.");
         }
+    }
+
+    // Allow preflight CORS
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
     }
 }
