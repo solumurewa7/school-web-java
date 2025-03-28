@@ -33,12 +33,12 @@ public class ChangeUsernameServlet extends HttpServlet {
         }
 
 
-        String newUsername = request.getParameter("new-username").trim();
-
-        if (newUsername == null || newUsername.trim().isEmpty()) {
+        String rawUsername = request.getParameter("new-username");
+        if (rawUsername == null || rawUsername.trim().isEmpty()) {
             response.getWriter().println("❌ New username cannot be empty.");
             return;
         }
+        String newUsername = rawUsername.trim();
 
         String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
         String user = "root";
