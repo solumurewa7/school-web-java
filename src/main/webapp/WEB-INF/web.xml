@@ -248,4 +248,27 @@
 
 
 
+
+    <servlet>
+        <servlet-name>TeacherLoginServlet</servlet-name>
+        <servlet-class>com.example.demo.TeacherLoginServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TeacherLoginServlet</servlet-name>
+        <url-pattern>/teacher-login</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
+
 </web-app>
