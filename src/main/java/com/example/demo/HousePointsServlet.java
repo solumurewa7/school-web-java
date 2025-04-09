@@ -19,14 +19,20 @@ public class HousePointsServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         JSONObject housePoints = new JSONObject();
 
+
+        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
+
         try {
             System.out.println("📦 Loading driver...");
             Class.forName("com.mysql.cj.jdbc.Driver");
             System.out.println("✅ Driver loaded!");
 
+
+
             System.out.println("🔌 Connecting to database...");
             Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school",
+                    url,
                     "root",
                     "seyolu7X"
             );
