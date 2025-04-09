@@ -29,7 +29,6 @@ public class HousePointsServlet extends HttpServlet {
                     "seyolu7X"
             );
 
-
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT house_name, points FROM houses");
 
