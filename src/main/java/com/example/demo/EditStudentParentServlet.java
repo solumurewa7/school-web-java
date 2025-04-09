@@ -7,6 +7,12 @@ import java.sql.*;
 public class EditStudentParentServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+
+
         String studentIdStr = request.getParameter("student-id"); // ✅ CHANGED from "edit-student-id"
         String studentFirst = request.getParameter("student-first-name"); // ✅ matches HTML
         String studentLast = request.getParameter("student-last-name");

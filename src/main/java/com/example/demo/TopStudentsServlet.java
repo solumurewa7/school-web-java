@@ -9,6 +9,12 @@ import org.json.JSONObject;
 public class TopStudentsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+
+
         System.out.println("📊 TopStudentsServlet called!");
 
         String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";

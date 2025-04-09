@@ -1,45 +1,52 @@
 package com.example.demo;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import java.io.PrintWriter;
+import java.sql.*;
 import org.json.JSONObject;
 
+@WebServlet("/house-points")
 public class HousePointsServlet extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // ✅ Allow CORS from any domain (or specify yours)
-        response.setHeader("Access-Control-Allow-Origin", "*");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // ✅ CORS
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
         response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
-        String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        JSONObject housePoints = new JSONObject();
 
-        JSONObject json = new JSONObject();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:20003/school",
+                    "root",
+                    "seyolu7X"
+            );
 
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            String sql = "SELECT house_name, points FROM houses";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT house_name, points FROM houses");
 
             while (rs.next()) {
-                String house = rs.getString("house_name").toLowerCase();
-                int points = rs.getInt("points");
-                json.put(house, points);
+                housePoints.put(rs.getString("house_name").toLowerCase(), rs.getInt("points"));
             }
 
-            response.getWriter().write(json.toString());
+            rs.close();
+            stmt.close();
+            conn.close();
+
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().write("{\"error\":\"Failed to fetch points.\"}");
+            response.setStatus(500);
+            housePoints.put("error", "Internal server error");
         }
+
+        out.print(housePoints.toString());
+        out.flush();
     }
 }

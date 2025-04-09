@@ -9,6 +9,13 @@ import java.sql.*;
 public class StudentInfoServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+
+
         String studentIdParam = request.getParameter("student-id"); // ✅ CHANGED from "id" to "student-id"
 
         if (studentIdParam == null || studentIdParam.isEmpty()) {
