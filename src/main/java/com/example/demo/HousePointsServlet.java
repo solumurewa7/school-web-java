@@ -20,6 +20,7 @@ public class HousePointsServlet extends HttpServlet {
         JSONObject housePoints = new JSONObject();
 
 
+
         String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
 
