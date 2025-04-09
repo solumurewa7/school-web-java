@@ -10,55 +10,27 @@ import org.json.JSONObject;
 
 @WebServlet("/house-points")
 public class HousePointsServlet extends HttpServlet {
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
-        System.out.println("🏁 HousePointsServlet was called!");
-
-
-
-        // ✅ CORS
+        System.out.println("🏁 HousePointsServlet called");
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
         response.setContentType("application/json");
-        PrintWriter out = response.getWriter();
 
+        PrintWriter out = response.getWriter();
         JSONObject housePoints = new JSONObject();
 
-
-
-
         try {
-            System.out.println("📡 Trying to connect to DB...");
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school",
-                    "root",
-                    "seyolu7X"
-            );
-            System.out.println("✅ Connected to DB!");
-        } catch (SQLException e) {
-            System.out.println("❌ DB connection failed: " + e.getMessage());
-            response.setStatus(500);
-            response.getWriter().write("{\"error\": \"DB connection failed.\"}");
-            return;
-        }
-
-
-
-
-
-        try {
+            System.out.println("📦 Loading driver...");
             Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("✅ Driver loaded!");
+
+            System.out.println("🔌 Connecting to database...");
             Connection conn = DriverManager.getConnection(
                     "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school",
                     "root",
                     "seyolu7X"
             );
-
+            System.out.println("✅ Connected to DB");
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT house_name, points FROM houses");
@@ -72,9 +44,10 @@ public class HousePointsServlet extends HttpServlet {
             conn.close();
 
         } catch (Exception e) {
+            System.out.println("❌ ERROR in HousePointsServlet: " + e.getMessage());
             e.printStackTrace();
             response.setStatus(500);
-            housePoints.put("error", "Internal server error");
+            housePoints.put("error", "Something broke.");
         }
 
         out.print(housePoints.toString());
