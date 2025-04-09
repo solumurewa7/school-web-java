@@ -15,6 +15,8 @@ public class HousePointsServlet extends HttpServlet {
         // ✅ CORS
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
