@@ -12,6 +12,12 @@ import org.json.JSONObject;
 public class HousePointsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
+        System.out.println("🏁 HousePointsServlet was called!");
+
+
+
         // ✅ CORS
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -22,6 +28,28 @@ public class HousePointsServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         JSONObject housePoints = new JSONObject();
+
+
+
+
+        try {
+            System.out.println("📡 Trying to connect to DB...");
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school",
+                    "root",
+                    "seyolu7X"
+            );
+            System.out.println("✅ Connected to DB!");
+        } catch (SQLException e) {
+            System.out.println("❌ DB connection failed: " + e.getMessage());
+            response.setStatus(500);
+            response.getWriter().write("{\"error\": \"DB connection failed.\"}");
+            return;
+        }
+
+
+
+
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
