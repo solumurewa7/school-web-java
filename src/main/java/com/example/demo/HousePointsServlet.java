@@ -24,10 +24,11 @@ public class HousePointsServlet extends HttpServlet {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:20003/school",
+                    "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school",
                     "root",
                     "seyolu7X"
             );
+
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT house_name, points FROM houses");
