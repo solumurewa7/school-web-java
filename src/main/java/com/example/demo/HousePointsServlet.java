@@ -12,6 +12,7 @@ import org.json.JSONObject;
 public class HousePointsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // ✅ Required CORS
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("application/json");
@@ -38,7 +39,7 @@ public class HousePointsServlet extends HttpServlet {
             conn.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // 👈 important so we see the issue in Railway logs
             response.setStatus(500);
             housePoints.put("error", "Internal server error");
         }
