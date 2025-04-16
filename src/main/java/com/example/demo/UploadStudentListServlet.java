@@ -88,6 +88,8 @@ public class UploadStudentListServlet extends HttpServlet {
             }
 
 
+
+
             conn.commit();
             response.getWriter().println("✅ Uploaded successfully. " + successCount + " students added.");
 
