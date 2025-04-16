@@ -14,9 +14,9 @@ public class GivePointsServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
         response.setContentType("text/plain");
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        String url = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
         String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String password = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
         try {
             int studentId = Integer.parseInt(request.getParameter("student-id"));
@@ -24,14 +24,14 @@ public class GivePointsServlet extends HttpServlet {
 
             try (Connection conn = DriverManager.getConnection(url, user, password)) {
                 // Step 1: Update student points
-                String updateStudentSQL = "UPDATE students SET points = points + ? WHERE student_id = ?";
+                String updateStudentSQL = "UPDATE students SET points = points + ? WHERE id = ?";
                 PreparedStatement stmt = conn.prepareStatement(updateStudentSQL);
                 stmt.setInt(1, extraPoints);
                 stmt.setInt(2, studentId);
                 stmt.executeUpdate();
 
                 // Step 2: Get the student's house
-                String getHouseSQL = "SELECT house FROM students WHERE student_id = ?";
+                String getHouseSQL = "SELECT house FROM students WHERE id = ?";
                 PreparedStatement houseStmt = conn.prepareStatement(getHouseSQL);
                 houseStmt.setInt(1, studentId);
                 ResultSet rs = houseStmt.executeQuery();

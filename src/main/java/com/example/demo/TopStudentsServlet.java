@@ -9,17 +9,17 @@ import org.json.JSONObject;
 public class TopStudentsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+        // ✅ CORS headers
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-
-
+        response.setContentType("application/json");
 
         System.out.println("📊 TopStudentsServlet called!");
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        // ✅ Updated Railway SQL connection info
+        String url = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
         String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String password = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
         JSONArray jsonArray = new JSONArray();
 
@@ -37,20 +37,21 @@ public class TopStudentsServlet extends HttpServlet {
                 jsonArray.put(obj);
             }
 
-            // 👇 CORS fix
-            response.setHeader("Access-Control-Allow-Origin", "*");
-
-            response.setContentType("application/json");
             response.getWriter().write(jsonArray.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
-
-            // 👇 CORS for error responses too
-            response.setHeader("Access-Control-Allow-Origin", "*");
-
-            response.setContentType("application/json");
             response.getWriter().write("{\"error\":\"Failed to fetch top students\"}");
         }
+    }
+
+    // ✅ CORS preflight for GET
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

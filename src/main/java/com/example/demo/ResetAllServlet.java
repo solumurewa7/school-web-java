@@ -6,23 +6,26 @@ import java.sql.*;
 
 public class ResetAllServlet extends HttpServlet {
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-
+        // ✅ CORS Headers
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setContentType("text/plain");
 
-
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        // ✅ Railway SQL credentials
+        String url = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
         String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String password = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // Delete all parents
+            // Delete parents first (foreign key dependency)
             PreparedStatement deleteParents = conn.prepareStatement("DELETE FROM parents");
             deleteParents.executeUpdate();
 
-            // Delete all students
+            // Then delete students
             PreparedStatement deleteStudents = conn.prepareStatement("DELETE FROM students");
             deleteStudents.executeUpdate();
 
@@ -35,5 +38,14 @@ public class ResetAllServlet extends HttpServlet {
             e.printStackTrace();
             response.getWriter().println("❌ Failed to reset all data: " + e.getMessage());
         }
+    }
+
+    // Handle CORS preflight
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
     }
 }

@@ -12,11 +12,11 @@ public class TestDBServlet extends HttpServlet {
         response.setContentType("text/plain");
         try (PrintWriter out = response.getWriter()) {
             Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+                    "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
                     "root",
-                    "seyolu7X"
+                    "UZgNvgdRBJsyFtShwlrldLEclQrURJZb"
             );
-            out.println("✅ Connection success!");
+            out.println("✅ Connection success to Railway SQL!");
             conn.close();
         } catch (Exception e) {
             e.printStackTrace();

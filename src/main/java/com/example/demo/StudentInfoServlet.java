@@ -8,18 +8,16 @@ import java.sql.*;
 
 public class StudentInfoServlet extends HttpServlet {
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-
+        // ✅ CORS headers
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setContentType("application/json");
 
-
-
-        String studentIdParam = request.getParameter("student-id"); // ✅ CHANGED from "id" to "student-id"
+        String studentIdParam = request.getParameter("student-id");
 
         if (studentIdParam == null || studentIdParam.isEmpty()) {
-            response.setContentType("application/json");
             response.getWriter().write("{\"error\":\"Missing student ID\"}");
             return;
         }
@@ -28,19 +26,19 @@ public class StudentInfoServlet extends HttpServlet {
         try {
             studentId = Integer.parseInt(studentIdParam);
         } catch (NumberFormatException e) {
-            response.setContentType("application/json");
             response.getWriter().write("{\"error\":\"Invalid student ID format\"}");
             return;
         }
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        // ✅ Railway SQL connection
+        String url = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
         String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String password = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
         JSONObject json = new JSONObject();
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // 1. Get student info
+            // Student info
             String studentSQL = "SELECT first_name, last_name FROM students WHERE student_id = ?";
             try (PreparedStatement studentStmt = conn.prepareStatement(studentSQL)) {
                 studentStmt.setInt(1, studentId);
@@ -51,7 +49,7 @@ public class StudentInfoServlet extends HttpServlet {
                 }
             }
 
-            // 2. Get parent info
+            // Parent info
             String parentSQL = "SELECT first_name, last_name, email FROM parents WHERE student_id = ?";
             try (PreparedStatement parentStmt = conn.prepareStatement(parentSQL)) {
                 parentStmt.setInt(1, studentId);
@@ -63,13 +61,21 @@ public class StudentInfoServlet extends HttpServlet {
                 }
             }
 
-            response.setContentType("application/json");
             response.getWriter().write(json.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.setContentType("application/json");
             response.getWriter().write("{\"error\":\"Failed to fetch student and parent info\"}");
         }
+    }
+
+    // ✅ Handle preflight request
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

@@ -2,20 +2,18 @@ package com.example.demo;
 
 import java.io.IOException;
 import java.sql.*;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.*;
 import org.json.JSONObject;
 
 public class StudentPointsServlet extends HttpServlet {
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // ✅ Allow CORS from your frontend
+        // ✅ CORS for frontend
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
         response.setContentType("application/json");
 
         String studentId = request.getParameter("id");
@@ -25,9 +23,10 @@ public class StudentPointsServlet extends HttpServlet {
             return;
         }
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        // ✅ Railway SQL connection
+        String url = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
         String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String password = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "SELECT first_name, last_name, house, points FROM students WHERE student_id = ?";
@@ -50,5 +49,15 @@ public class StudentPointsServlet extends HttpServlet {
             e.printStackTrace();
             response.getWriter().write("{\"error\": \"Something went wrong.\"}");
         }
+    }
+
+    // ✅ Preflight
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

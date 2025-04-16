@@ -8,6 +8,7 @@ import java.sql.*;
 
 public class ChangePasswordServlet extends HttpServlet {
 
+    // ✅ Hash function for passwords
     private String hashPassword(String password) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hashedBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -18,7 +19,7 @@ public class ChangePasswordServlet extends HttpServlet {
         return sb.toString();
     }
 
-
+    // ✅ CORS preflight
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
@@ -27,13 +28,11 @@ public class ChangePasswordServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
     }
 
-
-
-
+    // ✅ POST request to update password
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
-        response.setHeader("Access-Control-Allow-Credentials", "true"); // 🔥 Required for session cookies
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
         response.setContentType("text/plain; charset=UTF-8");
@@ -42,10 +41,9 @@ public class ChangePasswordServlet extends HttpServlet {
         String newPassword = request.getParameter("new-password");
         String confirmPassword = request.getParameter("confirm-password");
 
-
-        System.out.println("📥 current-password: " + request.getParameter("current-password"));
-        System.out.println("📥 new-password: " + request.getParameter("new-password"));
-        System.out.println("📥 confirm-password: " + request.getParameter("confirm-password"));
+        System.out.println("📥 current-password: " + currentPassword);
+        System.out.println("📥 new-password: " + newPassword);
+        System.out.println("📥 confirm-password: " + confirmPassword);
 
         if (currentPassword == null || newPassword == null || confirmPassword == null ||
                 currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
@@ -58,9 +56,10 @@ public class ChangePasswordServlet extends HttpServlet {
             return;
         }
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        // ✅ Railway SQL credentials
+        String url = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
         String user = "root";
-        String pass = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String pass = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
         try (Connection conn = DriverManager.getConnection(url, user, pass)) {
             String getAdmin = "SELECT username, password_hash FROM admins LIMIT 1";

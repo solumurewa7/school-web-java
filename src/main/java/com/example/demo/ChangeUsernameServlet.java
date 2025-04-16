@@ -6,7 +6,6 @@ import java.sql.*;
 
 public class ChangeUsernameServlet extends HttpServlet {
 
-
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
@@ -14,8 +13,6 @@ public class ChangeUsernameServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
     }
-
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -25,14 +22,11 @@ public class ChangeUsernameServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
         response.setContentType("text/plain; charset=UTF-8");
 
-
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("isAdmin") == null) {
             response.getWriter().println("❌ Unauthorized. Admin login required.");
             return;
         }
-
-
 
         String rawUsername = request.getParameter("new-username");
         System.out.println("🔍 rawUsername: " + rawUsername);
@@ -42,9 +36,10 @@ public class ChangeUsernameServlet extends HttpServlet {
         }
         String newUsername = rawUsername.trim();
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        // ✅ Updated Railway SQL credentials
+        String url = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
         String user = "root";
-        String pass = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String pass = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
         try (Connection conn = DriverManager.getConnection(url, user, pass)) {
             String updateSQL = "UPDATE admins SET username = ? LIMIT 1";

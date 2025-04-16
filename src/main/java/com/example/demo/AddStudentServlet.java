@@ -7,6 +7,11 @@ import javax.servlet.http.*;
 
 public class AddStudentServlet extends HttpServlet {
 
+    private static final String DB_URL = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // ✅ Enable CORS
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
@@ -16,10 +21,7 @@ public class AddStudentServlet extends HttpServlet {
 
         response.setContentType("text/plain");
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
-        String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
-
+        // 🧠 Get all parameters from the form
         String studentName = request.getParameter("student-name");
         String studentEmail = request.getParameter("student-email");
         String parentName = request.getParameter("parent-name");
@@ -45,8 +47,8 @@ public class AddStudentServlet extends HttpServlet {
         String parentFirst = parentParts[0];
         String parentLast = parentParts[1];
 
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // Insert student
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // ✅ Insert student
             String studentSQL = "INSERT INTO students (student_first_name, student_last_name, student_email, house, points) VALUES (?, ?, ?, ?, 0)";
             PreparedStatement studentStmt = conn.prepareStatement(studentSQL, Statement.RETURN_GENERATED_KEYS);
             studentStmt.setString(1, studentFirst);
@@ -61,7 +63,7 @@ public class AddStudentServlet extends HttpServlet {
                 studentId = generatedKeys.getInt(1);
             }
 
-            // Insert parent
+            // ✅ Insert parent if student insert was successful
             if (studentId != -1) {
                 String parentSQL = "INSERT INTO parents (student_id, parent_first_name, parent_last_name, parent_email, relationship) VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement parentStmt = conn.prepareStatement(parentSQL);
@@ -80,7 +82,8 @@ public class AddStudentServlet extends HttpServlet {
         }
     }
 
-    // Handle preflight requests
+    // ✅ Preflight request handler
+    @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");

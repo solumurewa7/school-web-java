@@ -34,7 +34,7 @@ public class UploadStudentListServlet extends HttpServlet {
         try (
                 BufferedReader reader = new BufferedReader(new InputStreamReader(filePart.getInputStream()));
                 Connection conn = DriverManager.getConnection(
-                        "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school", "root", "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI")
+                        "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway", "root", "UZgNvgdRBJsyFtShwlrldLEclQrURJZb")
         ) {
             conn.setAutoCommit(false);
             String line;
@@ -56,7 +56,6 @@ public class UploadStudentListServlet extends HttpServlet {
                 String parentEmail = fields[6];
                 String parentType = fields[7];
 
-                // Insert into students (use "house" as a string, not an ID)
                 int studentId = -1;
                 String insertStudent = "INSERT INTO students (first_name, last_name, email, house, points) VALUES (?, ?, ?, ?, 0)";
                 try (PreparedStatement stmt = conn.prepareStatement(insertStudent, Statement.RETURN_GENERATED_KEYS)) {
@@ -75,7 +74,6 @@ public class UploadStudentListServlet extends HttpServlet {
                     }
                 }
 
-                // Insert into parents
                 String insertParent = "INSERT INTO parents (first_name, last_name, email, parent_type, student_id) VALUES (?, ?, ?, ?, ?)";
                 try (PreparedStatement stmt = conn.prepareStatement(insertParent)) {
                     stmt.setString(1, parentFirst);

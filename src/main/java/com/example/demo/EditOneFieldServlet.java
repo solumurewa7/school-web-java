@@ -48,34 +48,34 @@ public class EditOneFieldServlet extends HttpServlet {
             return;
         }
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        String url = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
         String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String password = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql;
 
             switch (field) {
                 case "student_first_name":
-                    sql = "UPDATE students SET first_name = ? WHERE student_id = ?";
+                    sql = "UPDATE students SET student_first_name = ? WHERE id = ?";
                     break;
                 case "student_last_name":
-                    sql = "UPDATE students SET last_name = ? WHERE student_id = ?";
+                    sql = "UPDATE students SET student_last_name = ? WHERE id = ?";
                     break;
                 case "student_email":
-                    sql = "UPDATE students SET email = ? WHERE student_id = ?";
+                    sql = "UPDATE students SET student_email = ? WHERE id = ?";
                     break;
                 case "parent_first_name":
-                    sql = "UPDATE parents SET first_name = ? WHERE student_id = ?";
+                    sql = "UPDATE parents SET parent_first_name = ? WHERE student_id = ?";
                     break;
                 case "parent_last_name":
-                    sql = "UPDATE parents SET last_name = ? WHERE student_id = ?";
+                    sql = "UPDATE parents SET parent_last_name = ? WHERE student_id = ?";
                     break;
                 case "parent_email":
-                    sql = "UPDATE parents SET email = ? WHERE student_id = ?";
+                    sql = "UPDATE parents SET parent_email = ? WHERE student_id = ?";
                     break;
                 case "house":
-                    sql = "UPDATE students SET house = ? WHERE student_id = ?";
+                    sql = "UPDATE students SET house = ? WHERE id = ?";
                     break;
                 default:
                     response.getWriter().println("❌ Invalid field selected.");

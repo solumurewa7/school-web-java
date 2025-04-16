@@ -4,20 +4,19 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.*;
 
 @WebServlet("/teacher-login")
 public class TeacherLoginServlet extends HttpServlet {
 
-    // Replace with your actual DB connection info
-    private static final String DB_URL = "jdbc:mysql://localhost:20003/school";
+    // ✅ Updated to Railway SQL connection
+    private static final String DB_URL = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "seyolu7X";
+    private static final String DB_PASSWORD = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Enable CORS
+        // ✅ CORS headers
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("application/json");
@@ -25,9 +24,14 @@ public class TeacherLoginServlet extends HttpServlet {
         String username = request.getParameter("teacher-username");
         String password = request.getParameter("teacher-password");
 
+        if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
+            response.getWriter().write("{\"status\": \"❌ Missing username or password\"}");
+            return;
+        }
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
 
-            // First, check if the user is an admin
+            // ✅ First: Check if admin
             String adminQuery = "SELECT * FROM admins WHERE username = ? AND password_hash = SHA2(?, 256)";
             try (PreparedStatement adminStmt = conn.prepareStatement(adminQuery)) {
                 adminStmt.setString(1, username);
@@ -38,12 +42,15 @@ public class TeacherLoginServlet extends HttpServlet {
                     HttpSession session = request.getSession(true);
                     session.setAttribute("role", "admin");
                     session.setAttribute("username", username);
+
+                    // ✅ Set cross-origin session cookie manually
+                    response.setHeader("Set-Cookie", "JSESSIONID=" + session.getId() + "; SameSite=None; Secure; Path=/; HttpOnly");
                     response.getWriter().write("{\"status\": \"admin\"}");
                     return;
                 }
             }
 
-            // Otherwise, check if the user is a teacher
+            // ✅ Then: Check if teacher
             String teacherQuery = "SELECT * FROM teachers WHERE username = ? AND password_hash = SHA2(?, 256)";
             try (PreparedStatement teacherStmt = conn.prepareStatement(teacherQuery)) {
                 teacherStmt.setString(1, username);
@@ -54,6 +61,8 @@ public class TeacherLoginServlet extends HttpServlet {
                     HttpSession session = request.getSession(true);
                     session.setAttribute("role", "teacher");
                     session.setAttribute("username", username);
+
+                    response.setHeader("Set-Cookie", "JSESSIONID=" + session.getId() + "; SameSite=None; Secure; Path=/; HttpOnly");
                     response.getWriter().write("{\"status\": \"teacher\"}");
                 } else {
                     response.getWriter().write("{\"status\": \"❌ Invalid username or password\"}");
@@ -72,5 +81,6 @@ public class TeacherLoginServlet extends HttpServlet {
         resp.setHeader("Access-Control-Allow-Credentials", "true");
         resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
         resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

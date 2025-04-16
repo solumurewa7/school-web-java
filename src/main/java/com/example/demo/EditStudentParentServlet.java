@@ -11,10 +11,8 @@ public class EditStudentParentServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
-
-
-        String studentIdStr = request.getParameter("student-id"); // ✅ CHANGED from "edit-student-id"
-        String studentFirst = request.getParameter("student-first-name"); // ✅ matches HTML
+        String studentIdStr = request.getParameter("student-id");
+        String studentFirst = request.getParameter("student-first-name");
         String studentLast = request.getParameter("student-last-name");
         String parentFirst = request.getParameter("parent-first-name");
         String parentLast = request.getParameter("parent-last-name");
@@ -35,13 +33,13 @@ public class EditStudentParentServlet extends HttpServlet {
             return;
         }
 
-        String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
+        String url = "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway";
         String user = "root";
-        String password = "PcPRhDcYaVtsVhyDjLLUPyjxJhdqbeXI";
+        String password = "UZgNvgdRBJsyFtShwlrldLEclQrURJZb";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            // Update student
-            String updateStudentSQL = "UPDATE students SET first_name = ?, last_name = ? WHERE student_id = ?";
+            // ✅ Update student info
+            String updateStudentSQL = "UPDATE students SET student_first_name = ?, student_last_name = ? WHERE id = ?";
             try (PreparedStatement studentStmt = conn.prepareStatement(updateStudentSQL)) {
                 studentStmt.setString(1, studentFirst);
                 studentStmt.setString(2, studentLast);
@@ -49,8 +47,8 @@ public class EditStudentParentServlet extends HttpServlet {
                 studentStmt.executeUpdate();
             }
 
-            // Update parent
-            String updateParentSQL = "UPDATE parents SET first_name = ?, last_name = ?, email = ? WHERE student_id = ?";
+            // ✅ Update parent info
+            String updateParentSQL = "UPDATE parents SET parent_first_name = ?, parent_last_name = ?, parent_email = ? WHERE student_id = ?";
             try (PreparedStatement parentStmt = conn.prepareStatement(updateParentSQL)) {
                 parentStmt.setString(1, parentFirst);
                 parentStmt.setString(2, parentLast);
