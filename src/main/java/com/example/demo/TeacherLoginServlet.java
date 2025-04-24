@@ -1,4 +1,4 @@
-package com.example.demo;
+/*package com.example.demo;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -84,3 +84,4 @@ public class TeacherLoginServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }
+*/
