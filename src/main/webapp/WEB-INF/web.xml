@@ -9,6 +9,7 @@
         <servlet-class>com.example.demo.AddStudentServlet</servlet-class>
     </servlet>
 
+
     <servlet-mapping>
         <servlet-name>AddStudentServlet</servlet-name>
         <url-pattern>/add-student</url-pattern>
