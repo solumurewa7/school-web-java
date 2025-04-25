@@ -23,13 +23,17 @@ public class TestDBServlet extends HttpServlet {
 
         JSONObject result = new JSONObject();
 
+        System.out.println("🟢 TestDBServlet - Attempting to connect to the database...");
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            System.out.println("🟢 TestDBServlet - Database connection established!");
+
             // Test the connection by running a simple query
             String sql = "SELECT 1 AS test";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                System.out.println("🟢 TestDBServlet - Database query executed successfully.");
                 result.put("success", true);
                 result.put("message", "Database connection successful!");
             }
@@ -38,15 +42,19 @@ public class TestDBServlet extends HttpServlet {
             rs.close();
             stmt.close();
             conn.close();
+            System.out.println("🟢 TestDBServlet - Database connection closed.");
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "Database connection failed: " + e.getMessage());
+            System.out.println("❌ TestDBServlet - Database connection failed: " + e.getMessage());
         }
 
         // Send response
         PrintWriter out = response.getWriter();
         out.print(result.toString());
         out.flush();
+
+        System.out.println("🟢 TestDBServlet - Response sent successfully!");
     }
 }
