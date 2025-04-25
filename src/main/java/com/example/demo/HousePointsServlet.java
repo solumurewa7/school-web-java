@@ -12,83 +12,79 @@ import org.json.JSONObject;
 public class HousePointsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // ✅ Required CORS
+        // ✅ Required CORS - Add detailed headers
+        System.out.println("🟢 Setting up CORS headers...");
+
+        // Allow requests from your frontend
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
         response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+        // Content type for the response
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // Debug: Checking incoming request headers
+        System.out.println("🟡 Incoming Request Headers: ");
+        System.out.println("Origin: " + request.getHeader("Origin"));
+        System.out.println("Method: " + request.getMethod());
+
+        // If it's an OPTIONS request (pre-flight request for CORS), just respond with 200 OK
+        if ("OPTIONS".equals(request.getMethod())) {
+            System.out.println("🟢 Pre-flight CORS request received. Responding with 200 OK.");
+            response.setStatus(HttpServletResponse.SC_OK);
+            return; // Short-circuit further processing
+        }
 
         JSONObject housePoints = new JSONObject();
 
-        // Debug: Start of method
-        System.out.println("🟢 Start of the doGet method!");
-
         try {
-            // Try to connect to the database
+            // Database connection logic
             System.out.println("🔌 Connecting to the database...");
             Connection conn = DriverManager.getConnection(
                     "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway",
                     "root", "UZgNvgdRBJsyFtShwlrldLEclQrURJZb"
             );
-            System.out.println("🟢 Successfully connected to the database!");
+            System.out.println("🟢 Connected to the database!");
 
-            // Debug: Check if the connection is good
-            if (conn != null) {
-                System.out.println("🔌 Connection is open!");
-            } else {
-                System.out.println("❌ Failed to connect!");
-            }
-
-            // Execute the query to get the points
-            System.out.println("💬 Executing SQL query...");
+            // Query to get the points
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT house_name, points FROM houses");
 
-            // Debug: Check if the ResultSet has data
+            // Check if any data was returned
             if (!rs.next()) {
                 System.out.println("❌ No data returned from the query.");
             } else {
                 System.out.println("🟢 Data retrieved successfully from the database.");
                 do {
-                    // For each row, get the house name and points
                     String houseName = rs.getString("house_name");
                     int points = rs.getInt("points");
-                    System.out.println("💬 Found house: " + houseName + " with points: " + points);
-
-                    // Store the data in the JSON object
                     housePoints.put(houseName.toLowerCase(), points);
-
-                    // Debug: Check what’s in the JSON object so far
-                    System.out.println("📝 Current JSON data: " + housePoints.toString());
-
-                } while (rs.next());  // Continue until all rows are processed
+                    System.out.println("💬 Adding to JSON: " + houseName + ": " + points);
+                } while (rs.next());
             }
 
-            // Debug: Closing resources
-            System.out.println("🔒 Closing ResultSet, Statement, and Connection...");
+            // Clean up database resources
             rs.close();
             stmt.close();
             conn.close();
 
-        } catch (SQLException e) {
-            // Catch any SQL exceptions
-            System.out.println("❌ SQL Exception: " + e.getMessage());
+        } catch (Exception e) {
+            // Handle errors and send back error message in JSON
             e.printStackTrace();
             response.setStatus(500);
-            housePoints.put("error", "Internal server error - SQL issue.");
+            housePoints.put("error", "Internal server error");
         }
 
-        // Debug: Before sending the response
-        System.out.println("📝 Preparing to send the data to the frontend...");
+        // Debug: Sending data
+        System.out.println("🟢 Sending response data: " + housePoints.toString());
 
-        // Debug: Check final JSON data before sending it
-        System.out.println("📡 Sending the data: " + housePoints.toString());
-
-        // Send the JSON response
+        // Send the JSON response to the client
         PrintWriter out = response.getWriter();
         out.print(housePoints.toString());
         out.flush();
 
-        // Debug: End of method
-        System.out.println("🟢 End of the doGet method!");
+        System.out.println("🟢 Response sent successfully!");
     }
 }

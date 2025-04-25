@@ -46,15 +46,6 @@
 
 
 
-    <servlet>
-        <servlet-name>StudentListServlet</servlet-name>
-        <servlet-class>com.example.demo.StudentListServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>StudentListServlet</servlet-name>
-        <url-pattern>/students</url-pattern>
-    </servlet-mapping>
 
 
 
@@ -276,6 +267,18 @@
         <servlet-name>TestDBServlet</servlet-name>
         <url-pattern>/test-db</url-pattern>
     </servlet-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

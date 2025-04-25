@@ -10,8 +10,19 @@ import org.json.JSONObject;
 public class StudentListServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // ✅ Add CORS header
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        // ✅ Add CORS header for your frontend domain
+        response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");  // Allow only your frontend
+        response.setHeader("Access-Control-Allow-Credentials", "true");  // Allow credentials (cookies, etc.)
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+        // If it's an OPTIONS request (pre-flight check), we can just return 200
+        if ("OPTIONS".equals(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
+        // Set content type to JSON
         response.setContentType("application/json");
 
         String url = "jdbc:mysql://nozomi.proxy.rlwy.net:20003/school";
