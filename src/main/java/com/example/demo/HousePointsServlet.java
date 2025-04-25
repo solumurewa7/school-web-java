@@ -55,11 +55,29 @@ public class HousePointsServlet extends HttpServlet {
             // Check if any data was returned
             if (!rs.next()) {
                 System.out.println("❌ No data returned from the query.");
+                housePoints.put("error", "No data found");
             } else {
                 System.out.println("🟢 Data retrieved successfully from the database.");
                 do {
                     String houseName = rs.getString("house_name");
                     int points = rs.getInt("points");
+
+                    // Ensure the house name matches valid names
+                    String[] validHouses = {"Red", "Blue", "Yellow", "Purple", "Black"};
+                    boolean isValidHouse = false;
+                    for (String validHouse : validHouses) {
+                        if (validHouse.equalsIgnoreCase(houseName)) {
+                            isValidHouse = true;
+                            break;
+                        }
+                    }
+
+                    // If house is not valid, log an error and skip it
+                    if (!isValidHouse) {
+                        System.out.println("❌ Invalid house found in database: " + houseName);
+                        continue;
+                    }
+
                     housePoints.put(houseName.toLowerCase(), points);
                     System.out.println("💬 Adding to JSON: " + houseName + ": " + points);
                 } while (rs.next());

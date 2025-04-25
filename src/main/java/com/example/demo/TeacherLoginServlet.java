@@ -24,6 +24,7 @@ public class TeacherLoginServlet extends HttpServlet {
         String username = request.getParameter("teacher-username");
         String password = request.getParameter("teacher-password");
 
+        // Validate inputs
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
             response.getWriter().write("{\"status\": \"❌ Missing username or password\"}");
             return;

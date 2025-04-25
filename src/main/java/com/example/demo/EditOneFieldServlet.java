@@ -30,7 +30,7 @@ public class EditOneFieldServlet extends HttpServlet {
         try {
             studentId = Integer.parseInt(studentIdStr);
             if (field.equals("house")) {
-                String[] validHouses = {"Red", "Blue", "Yellow", "Green", "Black"};
+                String[] validHouses = {"Red", "Blue", "Yellow", "Purple", "Black"}; // Changed Green to Purple
                 boolean isValid = false;
                 for (String h : validHouses) {
                     if (h.equalsIgnoreCase(newValue)) {

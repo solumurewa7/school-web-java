@@ -19,7 +19,10 @@ public class StudentPointsServlet extends HttpServlet {
         String studentId = request.getParameter("id");
 
         if (studentId == null || studentId.isEmpty()) {
-            response.getWriter().write("{\"error\": \"Missing student ID.\"}");
+            // ✅ Return error in JSON format for consistency
+            JSONObject errorResponse = new JSONObject();
+            errorResponse.put("error", "Missing student ID.");
+            response.getWriter().write(errorResponse.toString());
             return;
         }
 
@@ -35,23 +38,30 @@ public class StudentPointsServlet extends HttpServlet {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                JSONObject json = new JSONObject();
-                json.put("first_name", rs.getString("first_name"));
-                json.put("last_name", rs.getString("last_name"));
-                json.put("house", rs.getString("house"));
-                json.put("points", rs.getInt("points"));
-                response.getWriter().write(json.toString());
+                // ✅ Student found, send response as JSON
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("first_name", rs.getString("first_name"));
+                jsonResponse.put("last_name", rs.getString("last_name"));
+                jsonResponse.put("house", rs.getString("house"));
+                jsonResponse.put("points", rs.getInt("points"));
+                response.getWriter().write(jsonResponse.toString());
             } else {
-                response.getWriter().write("{\"error\": \"Student not found.\"}");
+                // ✅ Return error in JSON format when student is not found
+                JSONObject errorResponse = new JSONObject();
+                errorResponse.put("error", "Student not found.");
+                response.getWriter().write(errorResponse.toString());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().write("{\"error\": \"Something went wrong.\"}");
+            // ✅ Return error in JSON format if an exception occurs
+            JSONObject errorResponse = new JSONObject();
+            errorResponse.put("error", "Something went wrong.");
+            response.getWriter().write(errorResponse.toString());
         }
     }
 
-    // ✅ Preflight
+    // ✅ Preflight for OPTIONS request (CORS)
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");

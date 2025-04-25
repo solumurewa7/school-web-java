@@ -43,10 +43,12 @@ public class StudentInfoServlet extends HttpServlet {
             try (PreparedStatement studentStmt = conn.prepareStatement(studentSQL)) {
                 studentStmt.setInt(1, studentId);
                 ResultSet studentRS = studentStmt.executeQuery();
-                if (studentRS.next()) {
-                    json.put("student_first_name", studentRS.getString("first_name"));
-                    json.put("student_last_name", studentRS.getString("last_name"));
+                if (!studentRS.next()) {
+                    response.getWriter().write("{\"error\":\"No student found with this ID\"}");
+                    return;
                 }
+                json.put("student_first_name", studentRS.getString("first_name"));
+                json.put("student_last_name", studentRS.getString("last_name"));
             }
 
             // Parent info
@@ -54,7 +56,11 @@ public class StudentInfoServlet extends HttpServlet {
             try (PreparedStatement parentStmt = conn.prepareStatement(parentSQL)) {
                 parentStmt.setInt(1, studentId);
                 ResultSet parentRS = parentStmt.executeQuery();
-                if (parentRS.next()) {
+                if (!parentRS.next()) {
+                    json.put("parent_first_name", "N/A");
+                    json.put("parent_last_name", "N/A");
+                    json.put("parent_email", "N/A");
+                } else {
                     json.put("parent_first_name", parentRS.getString("first_name"));
                     json.put("parent_last_name", parentRS.getString("last_name"));
                     json.put("parent_email", parentRS.getString("email"));

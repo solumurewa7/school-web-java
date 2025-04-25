@@ -39,7 +39,22 @@ public class GivePointsServlet extends HttpServlet {
                 if (rs.next()) {
                     String house = rs.getString("house");
 
-                    // Step 3: Add points to house
+                    // Step 3: Check if house is valid
+                    String[] validHouses = {"Red", "Blue", "Yellow", "Purple", "Black"};
+                    boolean isValidHouse = false;
+                    for (String validHouse : validHouses) {
+                        if (validHouse.equalsIgnoreCase(house)) {
+                            isValidHouse = true;
+                            break;
+                        }
+                    }
+
+                    if (!isValidHouse) {
+                        response.getWriter().println("❌ Invalid house name: " + house);
+                        return;
+                    }
+
+                    // Step 4: Add points to house
                     String updateHouseSQL = "UPDATE houses SET points = points + ? WHERE house_name = ?";
                     PreparedStatement houseUpdateStmt = conn.prepareStatement(updateHouseSQL);
                     houseUpdateStmt.setInt(1, extraPoints);

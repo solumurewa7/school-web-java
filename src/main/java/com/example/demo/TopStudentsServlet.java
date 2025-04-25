@@ -28,14 +28,21 @@ public class TopStudentsServlet extends HttpServlet {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
+            // Check if there are any students to return
+            if (!rs.next()) {
+                response.getWriter().write("{\"error\":\"No students found\"}");
+                return;
+            }
+
+            // Collect top students data
+            do {
                 JSONObject obj = new JSONObject();
                 obj.put("first_name", rs.getString("first_name"));
                 obj.put("last_name", rs.getString("last_name"));
                 obj.put("house", rs.getString("house"));
                 obj.put("points", rs.getInt("points"));
                 jsonArray.put(obj);
-            }
+            } while (rs.next());
 
             response.getWriter().write(jsonArray.toString());
 

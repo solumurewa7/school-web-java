@@ -50,7 +50,11 @@ public class StudentListServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.getWriter().write("{\"error\":\"Failed to fetch students\"}");
+            // Sending a JSON error message
+            JSONObject errorResponse = new JSONObject();
+            errorResponse.put("error", "Failed to fetch students");
+            errorResponse.put("message", e.getMessage());
+            response.getWriter().write(errorResponse.toString());
         }
     }
 }
