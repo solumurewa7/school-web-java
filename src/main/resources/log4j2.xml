@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
-    <!-- Console Appender to output log messages to the console -->
     <Appenders>
+        <!-- Console Appender -->
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{ISO8601} [%t] %-5level %logger{36} - %msg%n" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n" />
         </Console>
     </Appenders>
 
-    <!-- Root Logger Configuration -->
     <Loggers>
+        <!-- Set root logger level to DEBUG -->
         <Root level="debug">
             <AppenderRef ref="Console" />
         </Root>
 
-        <!-- Jetty-specific logging -->
-        <Logger name="org.eclipse.jetty" level="debug" additivity="false">
+        <!-- Add specific loggers if needed -->
+        <Logger name="com.example.demo" level="debug" additivity="false">
             <AppenderRef ref="Console" />
         </Logger>
     </Loggers>
