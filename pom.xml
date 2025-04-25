@@ -35,8 +35,8 @@
 
         <!-- ✅ MySQL Connector (FIXED: correct artifactId) -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <version>8.0.33</version>
         </dependency>
 
@@ -97,17 +97,6 @@
                     </webApp>
                 </configuration>
             </plugin>
-
-
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.44.v20210927</version>
-            </plugin>
-
-
-
-
         </plugins>
     </build>
 </project>
