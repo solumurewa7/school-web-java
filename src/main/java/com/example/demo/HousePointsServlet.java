@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 @WebServlet("/house-points")
 public class HousePointsServlet extends HttpServlet {
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // ✅ Required CORS - Add detailed headers
         System.out.println("🟢 Setting up CORS headers...");
@@ -41,12 +40,12 @@ public class HousePointsServlet extends HttpServlet {
 
         try {
             // Database connection logic
-            System.out.println("🔌 Connecting to the database...");
+            System.out.println("🔌 Attempting to connect to the database...");
             Connection conn = DriverManager.getConnection(
                     "jdbc:mysql://tramway.proxy.rlwy.net:50944/railway",
                     "root", "UZgNvgdRBJsyFtShwlrldLEclQrURJZb"
             );
-            System.out.println("🟢 Connected to the database!");
+            System.out.println("🟢 Successfully connected to the database!");
 
             // Query to get the points
             Statement stmt = conn.createStatement();
@@ -106,3 +105,4 @@ public class HousePointsServlet extends HttpServlet {
         System.out.println("🟢 Response sent successfully!");
     }
 }
+

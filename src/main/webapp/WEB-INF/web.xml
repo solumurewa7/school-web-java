@@ -14,7 +14,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-
     <!-- AddStudentServlet -->
     <servlet>
         <servlet-name>AddStudentServlet</servlet-name>
