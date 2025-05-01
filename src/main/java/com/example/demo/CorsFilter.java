@@ -1,23 +1,33 @@
 package com.example.demo;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class CorsFilter implements Filter {
-    public void init(FilterConfig filterConfig) {}
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {}
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        HttpServletResponse res = (HttpServletResponse) response;
-        res.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
-        res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        // Allow only your frontend origin to access the backend
+        httpResponse.setHeader("Access-Control-Allow-Origin", "https://houses.westerduin.eu");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
 
-        chain.doFilter(request, response);
+        // Handle preflight requests
+        if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) request).getMethod())) {
+            httpResponse.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
+        chain.doFilter(request, response); // Continue with the next filter or servlet
     }
 
+    @Override
     public void destroy() {}
 }
